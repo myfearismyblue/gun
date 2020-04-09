@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4efe10d8-f468-4783-88ed-a43331d3332e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gun.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gun.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/my_gun.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_gun.py" afterDir="false" />
     </list>
@@ -29,7 +31,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunManager" selected="Python.my_gun">
     <configuration name="gun" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -103,53 +106,74 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="126" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1586346752163" />
-    <state width="1344" height="63" key="GridCell.Tab.0.bottom" timestamp="1586447799134">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="280" key="GridCell.Tab.0.bottom" timestamp="1586458022526">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="63" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1586447799134" />
-    <state width="1344" height="63" key="GridCell.Tab.0.center" timestamp="1586447799134">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="280" key="GridCell.Tab.0.bottom/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586458022526" />
+    <state width="1898" height="280" key="GridCell.Tab.0.center" timestamp="1586458022526">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="63" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1586447799134" />
-    <state width="1344" height="63" key="GridCell.Tab.0.left" timestamp="1586447799134">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="280" key="GridCell.Tab.0.center/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586458022526" />
+    <state width="1898" height="280" key="GridCell.Tab.0.left" timestamp="1586458022526">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="63" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1586447799134" />
-    <state width="1344" height="63" key="GridCell.Tab.0.right" timestamp="1586447799134">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="280" key="GridCell.Tab.0.left/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586458022526" />
+    <state width="1898" height="280" key="GridCell.Tab.0.right" timestamp="1586458022526">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="63" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1586447799134" />
-    <state width="1344" height="73" key="GridCell.Tab.1.bottom" timestamp="1586336240994">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="280" key="GridCell.Tab.0.right/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586458022526" />
+    <state width="1898" height="346" key="GridCell.Tab.1.bottom" timestamp="1586455351153">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="73" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1586336240994" />
-    <state width="1344" height="73" key="GridCell.Tab.1.center" timestamp="1586336240994">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="346" key="GridCell.Tab.1.bottom/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586455351153" />
+    <state width="1898" height="346" key="GridCell.Tab.1.center" timestamp="1586455351153">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="73" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1586336240994" />
-    <state width="1344" height="73" key="GridCell.Tab.1.left" timestamp="1586336240994">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="346" key="GridCell.Tab.1.center/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586455351153" />
+    <state width="1898" height="346" key="GridCell.Tab.1.left" timestamp="1586455351153">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="73" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1586336240994" />
-    <state width="1344" height="73" key="GridCell.Tab.1.right" timestamp="1586336240994">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state width="1898" height="346" key="GridCell.Tab.1.left/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586455351153" />
+    <state width="1898" height="346" key="GridCell.Tab.1.right" timestamp="1586455351153">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1344" height="73" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1586336240994" />
+    <state width="1898" height="346" key="GridCell.Tab.1.right/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586455351153" />
     <state x="263" y="106" key="IDE.errors.dialog" timestamp="1586357604034">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="263" y="106" key="IDE.errors.dialog/0.0.1366.738@0.0.1366.738" timestamp="1586357604033" />
-    <state x="184" y="0" key="SettingsEditor" timestamp="1586447886703">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state x="391" y="135" key="SettingsEditor" timestamp="1586457472111">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="184" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1586447886703" />
-    <state x="359" y="191" key="com.intellij.ide.util.TipDialog" timestamp="1586447865067">
-      <screen x="0" y="0" width="1366" height="738" />
+    <state x="391" y="135" key="SettingsEditor/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586457472111" />
+    <state x="505" y="272" key="com.intellij.ide.util.TipDialog" timestamp="1586450540703">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="359" y="191" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1586447865067" />
+    <state x="505" y="272" key="com.intellij.ide.util.TipDialog/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586450540703" />
+    <state x="623" y="227" key="search.everywhere.popup" timestamp="1586455658139">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="623" y="227" key="search.everywhere.popup/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586455658139" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/my_gun.py</url>
+          <line>23</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

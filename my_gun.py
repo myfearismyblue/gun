@@ -9,31 +9,38 @@ INIT_GUN_POS_X = 0
 INIT_GUN_POS_Y = 0
 INIT_GUN_COLOR = 'blue'
 MAX_GUN_POWER = 50
-GUN_INCREASE_RATE = 0.5  # per tick
+GUN_INCREASE_RATE = 0.1  # per tick
 INIT_TARGET_COLOR = 'red'
 INIT_SHELL_RADIUS = 5
 
+button_1_hold = False
+
 
 def main():
-    global root, gun  # FIXME: make root local
+    global root, canvas, gun  # FIXME: make root local
+    [gun, target] = init_game_objects()
     root = tk.Tk()
+
     canvas = tk.Canvas(root)
     canvas.bind('<Button-1>', mouse_1_clicked_handler)
     canvas.bind('<ButtonRelease-1>', mouse_1_release_handler)
     canvas.bind('<Motion>', mouse_motion_handler)
     canvas.pack(fill=tk.BOTH, expand=1)
-    init_game_objects()
-    # tick()
+
+    tick()
     root.mainloop()
     pass
 
 
 def mouse_1_clicked_handler(event):
-    print('Mouse clicked. Power is', gun.power)
-    # gun.increase_power(event)
+    global button_1_hold
+    button_1_hold = True
 
 
 def mouse_1_release_handler(event):
+    global button_1_hold
+    button_1_hold = False
+    print(button_1_hold)
     gun.fire()
 
 
@@ -45,17 +52,19 @@ def tick():
     """
     Moves and reshows everything on canvas.
     """
-    global root, TIME_REFRESH  # FIXME: make root local
+    global root, button_1_hold  # FIXME: make root local
     # TODO:move_everything
     # TODO:show_everything
+    if button_1_hold:
+        gun.target_and_increase_power()
     root.after(TIME_REFRESH, tick)
 
 
 def init_game_objects():
-    global gun
     gun = Gun()
     target = Target()
     target.create()
+    return gun, target
 
 
 class Gun:
@@ -96,14 +105,15 @@ class Gun:
         self.x2 = self.x1 + m.cos(m.atan(self.angle)) * self.power
         self.y2 = self.y1 + m.sin(m.atan(self.angle)) * self.power
 
-    def increase_power(self, event):
+    def target_and_increase_power(self):
         """
         Increases gun power while targeting
         """
-        if event == '<Button-1>':
-            while event and self.power <= MAX_GUN_POWER:
-                self.power += GUN_INCREASE_RATE
-        self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        global button_1_hold
+        while button_1_hold and self.power <= MAX_GUN_POWER:
+            print('mouse clicked. power', self.power, button_1_hold)  # FIXME: make cycle interruptable
+            self.power += GUN_INCREASE_RATE
+            self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
         """Creates shell on guns end with power / 10 velocity"""
