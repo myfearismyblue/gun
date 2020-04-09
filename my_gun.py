@@ -13,6 +13,7 @@ GUN_INCREASE_RATE = 0.5  # per tick
 INIT_TARGET_COLOR = 'red'
 INIT_SHELL_RADIUS = 5
 
+
 def main():
     global root, gun  # FIXME: make root local
     root = tk.Tk()
@@ -32,7 +33,6 @@ def mouse_1_clicked_handler(event):
     # gun.increase_power(event)
 
 
-
 def mouse_1_release_handler(event):
     gun.fire()
 
@@ -43,7 +43,7 @@ def mouse_motion_handler(event):
 
 def tick():
     """
-    Moves and reshows everything on canvas
+    Moves and reshows everything on canvas.
     """
     global root, TIME_REFRESH  # FIXME: make root local
     # TODO:move_everything
@@ -115,7 +115,7 @@ class Gun:
         shell.create(x, y, dx, dy)
 
     def show(self):
-        pass    #tkinter show
+        pass  # tkinter show
 
     def print_yourself(self):
         print('x1 = ', self.x1, 'y1 = ', self.y1)
@@ -186,6 +186,7 @@ class Shell:
         print('x = ', self.x, 'y = ', self.y)
         print('dx = ', self.dx, 'dy = ', self.dy)
         print('color = ', self.color, 'live = ', self.live)
+
 
 if __name__ == '__main__':
     DEBUG = 0
