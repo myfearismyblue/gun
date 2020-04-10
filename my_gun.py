@@ -4,24 +4,29 @@ import math as m
 import time
 
 TIME_REFRESH = 50  # tick time in milliseconds
-INIT_GUN_POWER = 10
-INIT_GUN_POS_X = 0
+INIT_GUN_POWER = 30
+INIT_GUN_POS_X = 100
 INIT_GUN_POS_Y = 0
 INIT_GUN_COLOR = 'blue'
-MAX_GUN_POWER = 50
-GUN_INCREASE_RATE = 0.1  # per tick
+MAX_GUN_POWER = 100
+GUN_INCREASE_RATE = 1  # per tick
+GUN_DECREASE_RATE = 2
 INIT_TARGET_COLOR = 'red'
 INIT_SHELL_RADIUS = 5
+SHELL_LIFETIME = 2 * 1000 / TIME_REFRESH  # seconds
+CANVAS_WIDTH = 800
+CANVAS_HEIGHT = 600
 
 button_1_hold = False
 
 
 def main():
-    global root, canvas, gun  # FIXME: make root local
-    [gun, target] = init_game_objects()
-    root = tk.Tk()
+    global root, canvas, gun, shell  # FIXME: make locals
 
+    root = tk.Tk()
+    root.geometry(str(CANVAS_WIDTH) + 'x' + str(CANVAS_HEIGHT))
     canvas = tk.Canvas(root)
+    [gun, target, shell] = init_game_objects()
     canvas.bind('<Button-1>', mouse_1_clicked_handler)
     canvas.bind('<ButtonRelease-1>', mouse_1_release_handler)
     canvas.bind('<Motion>', mouse_motion_handler)
@@ -40,7 +45,6 @@ def mouse_1_clicked_handler(event):
 def mouse_1_release_handler(event):
     global button_1_hold
     button_1_hold = False
-    print(button_1_hold)
     gun.fire()
 
 
@@ -48,23 +52,32 @@ def mouse_motion_handler(event):
     gun.move(event.x, event.y)
 
 
+def power_up_handler():
+    global button_1_hold
+    gun.target_and_increase_power()
+
+
 def tick():
     """
     Moves and reshows everything on canvas.
     """
-    global root, button_1_hold  # FIXME: make root local
+    global root, button_1_hold, gun, shell  # FIXME: make root local
     # TODO:move_everything
     # TODO:show_everything
-    if button_1_hold:
-        gun.target_and_increase_power()
+    gun.show()  # gun moves in mainloop with MouseMotion  event
+    shell.move()
+    shell.show()
+    power_up_handler()
     root.after(TIME_REFRESH, tick)
 
 
 def init_game_objects():
+    """Inits game objects to be handled after"""
     gun = Gun()
+    shell = Shell()
     target = Target()
     target.create()
-    return gun, target
+    return gun, target, shell
 
 
 class Gun:
@@ -79,8 +92,13 @@ class Gun:
         self.angle = angle
         self.power = power
         self.color = color
-        self.x2 = self.x1 + m.cos(self.angle) * self.power
-        self.y2 = self.y1 + m.sin(self.angle) * self.power
+        self.x2 = self.x1 + m.sin(self.angle) * self.power
+        self.y2 = self.y1 + m.cos(self.angle) * self.power
+        self.live = True
+        if self.live:
+            self.id = canvas.create_line(self.x1, self.y1, self.x2, self.y2, width=10)
+        else:
+            self.id = 0
 
     def move(self, x_mouse_pointer, y_mouse_pointer):
         """
@@ -89,7 +107,7 @@ class Gun:
         """
         if y_mouse_pointer == 0:
             y_mouse_pointer += 1
-        self.angle = x_mouse_pointer / y_mouse_pointer
+        self.angle = m.atan((x_mouse_pointer - INIT_GUN_POS_X) / (y_mouse_pointer - INIT_GUN_POS_Y))
         self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def create(self, x, y, angle, power, color):
@@ -97,35 +115,43 @@ class Gun:
         Creates the gun with defined pos, angle, power and color.
         x1, y1 -- fixed end of the gun; x2, y2 -- moving end of the gun
         """
+        self.live = True
         self.x1 = x
         self.y1 = y
         self.angle = angle
         self.power = power
         self.color = color
-        self.x2 = self.x1 + m.cos(m.atan(self.angle)) * self.power
-        self.y2 = self.y1 + m.sin(m.atan(self.angle)) * self.power
+        self.x2 = self.x1 + m.sin(self.angle) * self.power
+        self.y2 = self.y1 + m.cos(self.angle) * self.power
 
     def target_and_increase_power(self):
         """
-        Increases gun power while targeting
+        Increases gun power while targeting, recreates itself
         """
         global button_1_hold
-        while button_1_hold and self.power <= MAX_GUN_POWER:
-            print('mouse clicked. power', self.power, button_1_hold)  # FIXME: make cycle interruptable
-            self.power += GUN_INCREASE_RATE
-            self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        if button_1_hold:
+            if self.power <= MAX_GUN_POWER:
+                self.power += GUN_INCREASE_RATE
+                self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        else:
+            if self.power >= INIT_GUN_POWER:
+                self.power -= GUN_DECREASE_RATE
+                self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
         """Creates shell on guns end with power / 10 velocity"""
         x = self.x2
         y = self.y2
-        dx = m.cos(m.atan(self.angle)) * self.power / 10
-        dy = m.sin(m.atan(self.angle)) * self.power / 10
-        shell = Shell()
+        dx = m.sin(m.atan(self.angle)) * self.power / 10
+        dy = m.cos(m.atan(self.angle)) * self.power / 10
         shell.create(x, y, dx, dy)
 
     def show(self):
-        pass  # tkinter show
+        if self.live:
+            canvas.coords(self.id, self.x1, self.y1, self.x2, self.y2)
+            # TODO: make color depending of power
+        else:
+            print('Gun hasnt called gun.create')  # FIXME
 
     def print_yourself(self):
         print('x1 = ', self.x1, 'y1 = ', self.y1)
@@ -156,7 +182,7 @@ class Target:
 
     def print_yourself(self):
         print('x = ', self.x, 'y = ', self.y)
-        print('R = ', self.R, 'live = ', self.live)
+        print('r = ', self.R, 'live = ', self.live)
 
 
 class Shell:
@@ -165,9 +191,17 @@ class Shell:
         self.y = y
         self.dx = dx
         self.dy = dy
-        self.R = INIT_SHELL_RADIUS
+        self.r = INIT_SHELL_RADIUS
         self.color = 'green'
-        self.live = True
+        self.live = 0
+        if self.live:
+            self.id = canvas.create_oval(
+                self.x - self.r,
+                self.y - self.r,
+                self.x + self.r,
+                self.y + self.r,
+                fill=self.color
+            )
 
     def create(self, x, y, dx, dy):
         """
@@ -178,7 +212,7 @@ class Shell:
         self.dx = dx
         self.dy = dy
         self.color = choice(['blue', 'green', 'red', 'brown'])
-        self.live = True
+        self.live = SHELL_LIFETIME
 
     def die(self):
         self.live = False
@@ -189,8 +223,28 @@ class Shell:
 
     def move(self):
         """Move itself by one tick"""
-        self.x += self.dx
-        self.y += self.dy
+        if self.live:
+            self.x += self.dx
+            self.y += self.dy
+            self.live -= 1
+
+    def show(self):
+        if self.live != 0:
+            canvas.coords(
+                self.id,
+                self.x - self.r,
+                self.y - self.r,
+                self.x + self.r,
+                self.y + self.r
+            )
+        else:
+            self.id = canvas.create_oval(
+                self.x - self.r,
+                self.y - self.r,
+                self.x + self.r,
+                self.y + self.r,
+                fill=self.color
+            )
 
     def print_yourself(self):
         print('x = ', self.x, 'y = ', self.y)
