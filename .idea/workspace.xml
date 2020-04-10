@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4efe10d8-f468-4783-88ed-a43331d3332e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_gun.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_gun.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,14 +138,14 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="263" y="106" key="IDE.errors.dialog/0.0.1366.738@0.0.1366.738" timestamp="1586357604033" />
-    <state x="184" y="0" key="SettingsEditor" timestamp="1586447886703">
+    <state x="184" y="0" key="SettingsEditor" timestamp="1586450699520">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="184" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1586447886703" />
-    <state x="359" y="191" key="com.intellij.ide.util.TipDialog" timestamp="1586447865067">
+    <state x="184" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1586450699520" />
+    <state x="359" y="191" key="com.intellij.ide.util.TipDialog" timestamp="1586524509996">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="359" y="191" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1586447865067" />
+    <state x="359" y="191" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1586524509996" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
