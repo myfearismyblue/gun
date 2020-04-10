@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4efe10d8-f468-4783-88ed-a43331d3332e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gun.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gun.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_gun.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_gun.py" afterDir="false" />
-    </list>
+    <list default="true" id="4efe10d8-f468-4783-88ed-a43331d3332e" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -155,11 +150,11 @@
     </state>
     <state x="184" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1586447886703" />
     <state x="391" y="135" key="SettingsEditor/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586457472111" />
-    <state x="505" y="272" key="com.intellij.ide.util.TipDialog" timestamp="1586450540703">
+    <state x="505" y="272" key="com.intellij.ide.util.TipDialog" timestamp="1586524264228">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="359" y="191" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1586447865067" />
-    <state x="505" y="272" key="com.intellij.ide.util.TipDialog/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586450540703" />
+    <state x="505" y="272" key="com.intellij.ide.util.TipDialog/0.0.1920.1050/-1440.180.1440.900@0.0.1920.1050" timestamp="1586524264228" />
     <state x="623" y="227" key="search.everywhere.popup" timestamp="1586455658139">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
