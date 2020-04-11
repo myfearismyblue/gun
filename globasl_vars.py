@@ -1,4 +1,5 @@
 from math import inf
+
 TIME_REFRESH = 50  # tick time in milliseconds
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
@@ -6,18 +7,19 @@ GUN_INIT_POWER = 30
 GUN_INIT_POS_X = 300
 GUN_INIT_POS_Y = 300
 GUN_INIT_COLOR = 'blue'
-GUN_MAX_POWER = 100
-GUN_INCREASE_RATE = 1  # per tick
+GUN_MAX_POWER = 150
+GUN_INCREASE_RATE = 1  # per a tick
 GUN_DECREASE_RATE = 2
+GUN_FIRING_RATIO = 2  # decreasing shell velocity factor
 SHELL_INIT_RADIUS = 5
 SHELL_LIFETIME = 30 * 1000 / TIME_REFRESH  # seconds
 TARGET_INIT_COLOR = 'red'
-TARGET_LIFETIME = inf
+TARGET_LIFETIME = inf * 1000 / TIME_REFRESH
 TARGET_APPEAR_WIDTH_INTERVAL = (600, 780)
 TARGET_APPEAR_HEIGHT_INTERVAL = (300, 550)
 TARGET_APPEAR_RADIUS_INTERVAL = (2, 50)
-
-GRAVITY_CONSTANT = 1
+GRAVITY_CONSTANT = 1  # increasing per a tick
 FRICTION_CONSTANT = 0.6  # part of initial speed remain
 
 button_1_hold = False
+button_2_hold = False

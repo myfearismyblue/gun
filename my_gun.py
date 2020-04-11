@@ -14,8 +14,10 @@ def main():
     canvas.create_rectangle(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     canvas_objects, gun = init_game_objects()
     canvas.bind('<Button-1>', mouse_1_clicked_handler)
+    canvas.bind('<Button-2>', mouse_2_clicked_handler)
     canvas.bind('<Button-3>', mouse_3_clicked_handler)
     canvas.bind('<ButtonRelease-1>', mouse_1_release_handler)
+    canvas.bind('<ButtonRelease-2>', mouse_2_release_handler)
     canvas.bind('<Motion>', mouse_motion_handler)
     canvas.pack(fill=tk.BOTH, expand=1)
 
@@ -45,8 +47,19 @@ def mouse_3_clicked_handler(event):
     canvas_objects[-1].create()  # creating
 
 
+def mouse_2_clicked_handler(event):
+    global button_2_hold
+    button_2_hold = True
+
+
+def mouse_2_release_handler(event):
+    global button_2_hold
+    button_2_hold = False
+    gun.fire2()
+
+
 def power_up_handler():
-    global button_1_hold, canvas_objects, gun
+    global button_1_hold, button_2_hold, canvas_objects, gun
     gun.target_and_increase_power()
 
 
@@ -81,14 +94,16 @@ def collision_check(obj1, obj2):
     else:
         return False
 
+def from_rgb(rgb):
+    """translates an rgb tuple of int to a tkinter friendly color code
+    """
+    return "#%02x%02x%02x" % rgb
 
 def tick():
     """
     Moves and reshows everything on canvas.
     """
     global root, button_1_hold, gun, canvas_objects  # FIXME: make root local
-    # TODO:move_everything
-    # TODO:show_everything
     power_up_handler()
     gun.show()
     for obj in canvas_objects:
@@ -105,7 +120,7 @@ def init_game_objects():
     gun = Gun()
     canvas_objects.append(Shell())
     canvas_objects.append(Target())
-    canvas_objects[1].create()
+    canvas_objects[-1].create()
     return canvas_objects, gun
 
 
@@ -155,39 +170,56 @@ class Gun:
         """
         Increases/decreases gun power while targeting, recreates itself
         """
-        global button_1_hold
-        if button_1_hold:
+        global button_1_hold, button_2_hold
+        if button_1_hold or button_2_hold:
             if self.power <= GUN_MAX_POWER:
                 self.power += GUN_INCREASE_RATE
-                self.create(self.x1, self.y1, self.angle, self.power, self.color)
         else:
             if self.power >= GUN_INIT_POWER:
                 self.power -= GUN_DECREASE_RATE
-                self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        self.color = from_rgb((min(2*self.power, 255), (min(2*self.power, 255)), 0))
+        self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
-        """Creates shell on guns end with power / const velocity"""
+        """Creates a shell on guns end with power / const velocity. Appends shell to global list """
         x = self.x2
         y = self.y2
-        dx = m.cos(self.angle) * self.power / 1
-        dy = m.sin(self.angle) * self.power / 1
+        dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
+        dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
         canvas_objects.append(Shell())
         canvas_objects[-1].create(x, y, dx, dy)
 
+    def fire2(self):
+        """Creates a target on guns end with power / const velocity. Appends shell to global list """
+        x = self.x2
+        y = self.y2
+        dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
+        dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
+        canvas_objects.append(Target())  # inits as an object
+        canvas_objects[-1].create2(x, y, dx, dy)  # creates defined objects
+
     def show(self):
+        """Make all physical changes visible"""
         if self.live:
             canvas.coords(self.id, self.x1, self.y1, self.x2, self.y2)
-            canvas.itemconfig(self.id, fill=GUN_INIT_COLOR)
+            canvas.itemconfig(self.id, fill=self.color)
             # TODO: make color depending of power
         else:
             print('Gun hasn\'t called gun.create')  # FIXME
 
     def count_angle(self, x_mouse_pointer, y_mouse_pointer):
-        if x_mouse_pointer - GUN_INIT_POS_X:
+        """Counts angle in radians to mouse pointer"""
+        if x_mouse_pointer - GUN_INIT_POS_X > 0:  # mouse pointer at the right semi-plane
             self.angle = m.atan((y_mouse_pointer - GUN_INIT_POS_Y) /
                                 (x_mouse_pointer - GUN_INIT_POS_X))
+        elif x_mouse_pointer - GUN_INIT_POS_X < 0:  # adding pi/2 if it's at the left
+            self.angle = m.pi + m.atan((y_mouse_pointer - GUN_INIT_POS_Y) /
+                                       (x_mouse_pointer - GUN_INIT_POS_X))
         else:  # zerodevision handle
-            self.angle = m.pi / 2
+            if y_mouse_pointer - GUN_INIT_POS_Y > 0:  # pointing down
+                self.angle = m.pi / 2
+            else:  # pointing up
+                self.angle = m.pi + m.pi / 2
 
     def print_yourself(self):
         print('x1 = ', self.x1, 'y1 = ', self.y1)
@@ -216,6 +248,15 @@ class Target:
         self.x = rnd(TARGET_APPEAR_WIDTH_INTERVAL[0], TARGET_APPEAR_WIDTH_INTERVAL[1])
         self.y = rnd(TARGET_APPEAR_HEIGHT_INTERVAL[0], TARGET_APPEAR_HEIGHT_INTERVAL[1])
         self.life_time = TARGET_LIFETIME
+
+    def create2(self, x, y, dx, dy):
+        self.x = x
+        self.y = y
+        self.dx = dx
+        self.dy = dy
+        self.r = rnd(TARGET_APPEAR_RADIUS_INTERVAL[0], TARGET_APPEAR_RADIUS_INTERVAL[1])
+        self.count_angle()
+        self.life_time = SHELL_LIFETIME
 
     def show(self):
         if self.life_time > 0:  # if a target have to live
@@ -274,10 +315,15 @@ class Target:
             self.die()
 
     def count_angle(self):
-        if self.dx != 0:
+        if self.dx > 0:  # speed vector points to the right semi-plane
             self.angle = m.atan(self.dy / self.dx)
-        else:
-            self.angle = m.pi / 2
+        elif self.dx < 0:  # speed vector points to the left semi-plane
+            self.angle = m.pi + m.atan(self.dy / self.dx)
+        else:  # zerodevision handle
+            if self.dy > 0:  # vector down
+                self.angle = m.pi / 2
+            else:  # vector up
+                self.angle = m.pi + m.pi / 2
 
     def print_yourself(self):
         print('x = ', self.x, 'y = ', self.y)
@@ -305,7 +351,7 @@ class Shell:
         self.dx = dx
         self.dy = dy
         self.count_angle()
-        self.color = choice(['blue', 'green', 'red', 'brown'])
+        self.color = from_rgb((rnd(0, 255), rnd(0, 255), rnd(0, 255)))
         self.life_time = SHELL_LIFETIME
 
     def die(self):
@@ -369,10 +415,15 @@ class Shell:
                                              )
 
     def count_angle(self):
-        if self.dx != 0:
+        if self.dx > 0:  # speed vector points to the right semi-plane
             self.angle = m.atan(self.dy / self.dx)
-        else:
-            self.angle = m.pi / 2
+        elif self.dx < 0:  # speed vector points to the left semi-plane
+            self.angle = m.pi + m.atan(self.dy / self.dx)
+        else:  # zerodevision handle
+            if self.dy > 0:  # vector down
+                self.angle = m.pi / 2
+            else:  # vector up
+                self.angle = m.pi + m.pi / 2
 
     def print_yourself(self):
         print('x =', self.x, 'y =', self.y)
