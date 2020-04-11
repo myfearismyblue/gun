@@ -26,6 +26,31 @@ def main():
     pass
 
 
+def init_game_objects():
+    """Inits game objects to be handled after"""
+    canvas_objects = list()
+    gun = Gun()
+    canvas_objects.append(Shell())
+    canvas_objects.append(Target())
+    canvas_objects[-1].create()
+    return canvas_objects, gun
+
+
+def tick():
+    """
+    Moves and reshows everything on canvas.
+    """
+    global root, button_1_hold, gun, canvas_objects  # FIXME: make root local
+    power_up_handler()
+    gun.show()
+    for obj in canvas_objects:
+        obj.move()
+        obj.show()
+    collision_handler(canvas_objects)  # if shells and targets intersects, then targets die
+
+    root.after(TIME_REFRESH, tick)
+
+
 def mouse_1_clicked_handler(event):
     global button_1_hold
     button_1_hold = True
@@ -94,34 +119,11 @@ def collision_check(obj1, obj2):
     else:
         return False
 
+
 def from_rgb(rgb):
     """translates an rgb tuple of int to a tkinter friendly color code
     """
     return "#%02x%02x%02x" % rgb
-
-def tick():
-    """
-    Moves and reshows everything on canvas.
-    """
-    global root, button_1_hold, gun, canvas_objects  # FIXME: make root local
-    power_up_handler()
-    gun.show()
-    for obj in canvas_objects:
-        obj.move()
-        obj.show()
-    collision_handler(canvas_objects)  # if shells and targets intersects, then targets die
-
-    root.after(TIME_REFRESH, tick)
-
-
-def init_game_objects():
-    """Inits game objects to be handled after"""
-    canvas_objects = list()
-    gun = Gun()
-    canvas_objects.append(Shell())
-    canvas_objects.append(Target())
-    canvas_objects[-1].create()
-    return canvas_objects, gun
 
 
 class Gun:
@@ -177,7 +179,10 @@ class Gun:
         else:
             if self.power >= GUN_INIT_POWER:
                 self.power -= GUN_DECREASE_RATE
-        self.color = from_rgb((min(2*self.power, 255), (min(2*self.power, 255)), 0))
+        r = int(254 * self.power / GUN_MAX_POWER)
+        g = int(0 * self.power / GUN_MAX_POWER)
+        b = int(0 * self.power / GUN_MAX_POWER)
+        self.color = from_rgb((r, g, b))
         self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
@@ -284,6 +289,7 @@ class Target:
     def move(self):
         """Move itself by one tick"""
         if self.life_time > 0:  # at each tick physics done:
+            # For x coordinate:
             if 0 + self.r < self.x + self.dx < CANVAS_WIDTH - self.r:
                 self.x += self.dx
                 self.count_angle()
@@ -292,9 +298,10 @@ class Target:
                 self.dx = -self.dx * FRICTION_CONSTANT
                 self.dy *= FRICTION_CONSTANT
                 self.x += self.dx
-            if -1 <= self.dx <= 1:
+            if -0.3 <= self.dx <= 0.3:
                 self.dx = 0
                 self.count_angle()
+            # For y coordinate:
             if 0 + self.r < self.y + self.dy < CANVAS_HEIGHT - self.r:
                 self.y += self.dy
                 self.dy += GRAVITY_CONSTANT
@@ -374,7 +381,7 @@ class Shell:
                 self.dx = -self.dx * FRICTION_CONSTANT
                 self.dy *= FRICTION_CONSTANT
                 self.x += self.dx
-            if -1 <= self.dx <= 1:
+            if -0.3 <= self.dx <= 0.3:
                 self.dx = 0
                 self.count_angle()
             if 0 + self.r < self.y + self.dy < CANVAS_HEIGHT - self.r:
