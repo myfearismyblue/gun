@@ -21,5 +21,5 @@ TARGET_APPEAR_RADIUS_INTERVAL = (2, 50)
 GRAVITY_CONSTANT = 1  # increasing per a tick
 FRICTION_CONSTANT = 0.6  # part of initial speed remain
 
-button_1_hold = False
-button_2_hold = False
+BUTTON_1_HOLD = False
+BUTTON_2_HOLD = False

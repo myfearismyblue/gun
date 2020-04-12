@@ -37,9 +37,7 @@ def init_game_objects():
 
 
 def tick():
-    """
-    Moves and reshows everything on canvas.
-    """
+    """Moves and reshows everything on canvas."""
     global root, button_1_hold, gun, canvas_objects  # FIXME: make root local
     power_up_handler()
     gun.show()
@@ -89,8 +87,7 @@ def power_up_handler():
 
 
 def collision_handler(canvas_objects):
-    """
-    Check if collision occurs, comparing objects in list
+    """Check if collision occurs, comparing objects in list
     :param canvas_objects: list of collisionable objects on canvas
     """
     for i in range(len(canvas_objects)):
@@ -106,7 +103,7 @@ def collision_handler(canvas_objects):
 
 
 def collision_check(obj1, obj2):
-    """Checks if two round object intersects"""
+    """Checks if two round object intersects."""
     x1 = obj1.x
     y1 = obj1.y
     r1 = obj1.r
@@ -121,16 +118,14 @@ def collision_check(obj1, obj2):
 
 
 def from_rgb(rgb):
-    """translates an rgb tuple of int to a tkinter friendly color code
-    """
+    """translates an rgb tuple of int to a tkinter friendly color code."""
     return "#%02x%02x%02x" % rgb
 
 
 class Gun:
     def __init__(self, x=GUN_INIT_POS_X, y=GUN_INIT_POS_Y, angle=0,
                  power=GUN_INIT_POWER, color=GUN_INIT_COLOR):
-        """
-        Inits the gun with initial pos, angle, power and color.
+        """Inits the gun with initial pos, angle, power and color.
         x1, y1 -- fixed end of the gun; x2, y2 -- moving end of the gun
         """
         self.x1 = x
@@ -147,16 +142,14 @@ class Gun:
             self.id = 0
 
     def move(self, x_mouse_pointer=0, y_mouse_pointer=0):
-        """
-        Creates gun pointing on  mouse position
+        """Creates gun pointing on  mouse position
         :param x_mouse_pointer, y_mouse_pointr: mouse coordinates on canvas
         """
         self.count_angle(x_mouse_pointer, y_mouse_pointer)
         self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def create(self, x, y, angle, power, color):
-        """
-        Creates the gun with defined pos, angle, power and color.
+        """Creates the gun with defined pos, angle, power and color.
         x1, y1 -- fixed end of the gun; x2, y2 -- moving end of the gun
         """
         self.live = True
@@ -169,9 +162,7 @@ class Gun:
         self.y2 = self.y1 + m.sin(self.angle) * self.power
 
     def target_and_increase_power(self):
-        """
-        Increases/decreases gun power while targeting, recreates itself
-        """
+        """Increases/decreases gun power while targeting, recreates itself."""
         global button_1_hold, button_2_hold
         if button_1_hold or button_2_hold:
             if self.power <= GUN_MAX_POWER:
@@ -186,7 +177,7 @@ class Gun:
         self.create(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
-        """Creates a shell on guns end with power / const velocity. Appends shell to global list """
+        """Creates a shell on guns end with power / const velocity. Appends shell to global list."""
         x = self.x2
         y = self.y2
         dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
@@ -195,7 +186,7 @@ class Gun:
         canvas_objects[-1].create(x, y, dx, dy)
 
     def fire2(self):
-        """Creates a target on guns end with power / const velocity. Appends shell to global list """
+        """Creates a target on guns end with power / const velocity. Appends shell to global list."""
         x = self.x2
         y = self.y2
         dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
@@ -246,15 +237,14 @@ class Target:
         self.count_angle()
 
     def create(self):
-        """
-        Creates round target in random place, of random radius
-        """
+        """Creates round target in random place, of random radius."""
         self.r = rnd(TARGET_APPEAR_RADIUS_INTERVAL[0], TARGET_APPEAR_RADIUS_INTERVAL[1])
         self.x = rnd(TARGET_APPEAR_WIDTH_INTERVAL[0], TARGET_APPEAR_WIDTH_INTERVAL[1])
         self.y = rnd(TARGET_APPEAR_HEIGHT_INTERVAL[0], TARGET_APPEAR_HEIGHT_INTERVAL[1])
         self.life_time = TARGET_LIFETIME
 
     def create2(self, x, y, dx, dy):
+        """Creates Target object in defined place x, y w/ defined velocity dx, dy."""
         self.x = x
         self.y = y
         self.dx = dx
@@ -350,9 +340,7 @@ class Shell:
         self.life_time = 0
 
     def create(self, x, y, dx, dy):
-        """
-        Creates a ball of random color in defined pos and velocity, and random color
-        """
+        """Creates a ball of random color in defined pos and velocity, and random color."""
         self.x = x
         self.y = y
         self.dx = dx
@@ -371,7 +359,7 @@ class Shell:
         target.die()
 
     def move(self):
-        """Move itself by one tick"""
+        """Moves itself by one tick"""
         if self.life_time > 0:  # at each tick physics done:
             if 0 + self.r < self.x + self.dx < CANVAS_WIDTH - self.r:
                 self.x += self.dx
