@@ -571,7 +571,9 @@ class Shell:
             center_slope = (y2 - y1) / (x2 - x1)
             if center_slope == 0:
                 normal_slope = m.inf
-            normal_slope = 1 / center_slope
+            else:
+                normal_slope = 1 / center_slope
+
         else:
             center_slope = m.inf
             normal_slope = 0
