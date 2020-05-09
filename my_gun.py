@@ -1,7 +1,7 @@
 from random import randrange as rnd, choice
+from abc import ABCMeta, abstractmethod
 import tkinter as tk
 import math as m
-import time
 from globasl_vars import *
 
 
@@ -32,7 +32,6 @@ def init_game_objects():
     gun = Gun()
     canvas_objects.append(Shell())
     canvas_objects.append(Target())
-    canvas_objects[-1].create()
     return canvas_objects, gun
 
 
@@ -67,7 +66,7 @@ def mouse_motion_handler(event):
 def mouse_3_clicked_handler(event):
     global canvas_objects
     canvas_objects.append(Target())  # initing
-    canvas_objects[-1].create()  # creating
+    canvas_objects[-1]._set_shell_params()  # creating
 
 
 def mouse_2_clicked_handler(event):
@@ -102,7 +101,6 @@ def collision_handler(canvas_objects):
                     canvas_objects[j].rebound(canvas_objects[i])
                     canvas_objects[i].rebound(canvas_objects[j])
                     canvas_objects[j].pop_out(canvas_objects[i])
-
 
 
 def collision_check(obj1, obj2):
@@ -229,7 +227,23 @@ def from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
 
 
-class Gun:
+class IGameActor:
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def move(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def show(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def die(self):
+        raise NotImplementedError
+
+
+class Gun(IGameActor):
     def __init__(self, x=GUN_INIT_POS_X, y=GUN_INIT_POS_Y, angle=0,
                  power=GUN_INIT_POWER, color=GUN_INIT_COLOR):
         """Inits the gun with initial pos, angle, power and color.
@@ -252,63 +266,66 @@ class Gun:
         """Creates gun pointing on  mouse position
         :param x_mouse_pointer, y_mouse_pointr: mouse coordinates on canvas
         """
-        self.angle = count_angle(GUN_INIT_POS_X, GUN_INIT_POS_Y, x_mouse_pointer, y_mouse_pointer)
-        self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        if self.live:
+            self.angle = count_angle(GUN_INIT_POS_X, GUN_INIT_POS_Y, x_mouse_pointer, y_mouse_pointer)
+            self._set_gun_params(self.x1, self.y1, self.angle, self.power, self.color)
 
-    def create(self, x, y, angle, power, color):
+    def _set_gun_params(self, x, y, angle, power, color):
         """Creates the gun with defined pos, angle, power and color.
         x1, y1 -- fixed end of the gun; x2, y2 -- moving end of the gun
         """
-        self.live = True
-        self.x1 = x
-        self.y1 = y
-        self.angle = angle
-        self.power = power
-        self.color = color
-        self.x2 = self.x1 + m.cos(self.angle) * self.power
-        self.y2 = self.y1 + m.sin(self.angle) * self.power
+        if self.live:
+            self.x1 = x
+            self.y1 = y
+            self.angle = angle
+            self.power = power
+            self.color = color
+            self.x2 = self.x1 + m.cos(self.angle) * self.power
+            self.y2 = self.y1 + m.sin(self.angle) * self.power
 
     def target_and_increase_power(self):
         """Increases/decreases gun power while targeting, recreates itself."""
-        global BUTTON_1_HOLD, BUTTON_2_HOLD
-        if BUTTON_1_HOLD or BUTTON_2_HOLD:
-            if self.power <= GUN_MAX_POWER:
-                self.power += GUN_INCREASE_RATE
-        else:
-            if self.power >= GUN_INIT_POWER:
-                self.power -= GUN_DECREASE_RATE
-        r = int(254 * self.power / GUN_MAX_POWER)
-        g = int(0 * self.power / GUN_MAX_POWER)
-        b = int(0 * self.power / GUN_MAX_POWER)
-        self.color = from_rgb((r, g, b))
-        self.create(self.x1, self.y1, self.angle, self.power, self.color)
+        if self.live:
+            if BUTTON_1_HOLD or BUTTON_2_HOLD:
+                if self.power <= GUN_MAX_POWER:
+                    self.power += GUN_INCREASE_RATE
+            else:
+                if self.power >= GUN_INIT_POWER:
+                    self.power -= GUN_DECREASE_RATE
+            r = int(254 * self.power / GUN_MAX_POWER)
+            g = int(0 * self.power / GUN_MAX_POWER)
+            b = int(0 * self.power / GUN_MAX_POWER)
+            self.color = from_rgb((r, g, b))
+            self._set_gun_params(self.x1, self.y1, self.angle, self.power, self.color)
 
     def fire(self):
         """Creates a shell on guns end with power / const velocity. Appends shell to global list."""
-        x = self.x2
-        y = self.y2
-        dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
-        dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
-        canvas_objects.append(Shell())
-        canvas_objects[-1].create(x, y, dx, dy)
+        if self.live:
+            x = self.x2
+            y = self.y2
+            dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
+            dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
+            canvas_objects.append(Shell())
+            canvas_objects[-1]._set_shell_params(x, y, dx, dy)
 
     def fire2(self):
         """Creates a target on guns end with power / const velocity. Appends shell to global list."""
-        x = self.x2
-        y = self.y2
-        dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
-        dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
-        canvas_objects.append(Target())  # inits as an object
-        canvas_objects[-1].create2(x, y, dx, dy)  # creates defined objects
+        if self.live:
+            x = self.x2
+            y = self.y2
+            dx = m.cos(self.angle) * self.power / GUN_FIRING_RATIO
+            dy = m.sin(self.angle) * self.power / GUN_FIRING_RATIO
+            canvas_objects.append(Target())  # inits as an object
+            canvas_objects[-1].create2(x, y, dx, dy)  # creates defined objects
 
     def show(self):
         """Make all physical changes visible"""
         if self.live:
             canvas.coords(self.id, self.x1, self.y1, self.x2, self.y2)
             canvas.itemconfig(self.id, fill=self.color)
-            # TODO: make color depending of power
         else:
-            print('Gun hasn\'t called gun.create')  # FIXME
+            canvas.delete(self.id)
+            self.id = 0
 
     def print_yourself(self):
         print('x1 = ', self.x1, 'y1 = ', self.y1)
@@ -316,8 +333,13 @@ class Gun:
         print('angle = ', self.angle, 'power = ', self.power)
         print('color = ', self.color)
 
+    def die(self):
+        canvas.delete(self.id)
+        self.id = 0
+        self.live = False
 
-class Target:
+
+class Target(IGameActor):
     def __init__(self, x=0, y=0, dx=0, dy=0, r=0):
         self.x = x
         self.y = y
@@ -438,17 +460,10 @@ class Target:
             xc2 = xc
             yc2 = 0
 
-       # canvas.create_line(xc, yc, xc2, yc2)
-        # print('Tangency', xc, yc, xc2, yc2)
-        # print('old vector', x, y, x + dx, y + dy)
         new_vector = vector_reflection(xc, yc, xc2, yc2, x, y, x + dx, y + dy)
 
         self.dx = (new_vector[2] - new_vector[0])
         self.dy = (new_vector[3] - new_vector[1])
-
-        # canvas.create_line(x, y, x + dx, y + dy)
-        # print('New vector dx dy ', self.dx, self.dy)
-        # print(('------------'))
 
     def pop_out(self, target):
         x2 = target.x
@@ -464,26 +479,25 @@ class Target:
         target.x = x2 + (x2 - x1) * (L / (r1 + r2)) * (r2/(r1+r2))
         target.y = y2 + (y2 - y1) * (L / (r1 + r2)) * (r2/(r1+r2))
         new_L = ((target.x - self.x) ** 2 + (target.y - self.y) ** 2) ** 0.5
-        print(L, new_L)
 
     def print_yourself(self):
         print('x = ', self.x, 'y = ', self.y)
         print('r = ', self.r, 'id = ', self.id)
 
 
-class Shell:
+class Shell(IGameActor):
     def __init__(self, x=0, y=0, dx=0, dy=0):
         self.x = x
         self.y = y
         self.dx = dx
         self.dy = dy
-        self.angle = None
+        self.angle = count_angle(0, 0, self.dx, self.dy)
+        self.color = from_rgb((rnd(0, 255), rnd(0, 255), rnd(0, 255)))
+        self.life_time = SHELL_LIFETIME
         self.r = SHELL_INIT_RADIUS
-        self.color = 'green'
         self.id = 0  # id == 0, shell hasn't been drawn
-        self.life_time = 0
 
-    def create(self, x, y, dx, dy):
+    def _set_shell_params(self, x, y, dx, dy):
         """Creates a ball of random color in defined pos and velocity, and random color."""
         self.x = x
         self.y = y
@@ -587,18 +601,10 @@ class Shell:
         else:
             xc2 = xc
             yc2 = 0
-
-        # canvas.create_line(xc, yc, xc2, yc2)
-        # print('Tangency', xc, yc, xc2, yc2)
-        # print('old vector', x, y, x + dx, y + dy)
         new_vector = vector_reflection(xc, yc, xc2, yc2, x, y, x + dx, y + dy)
 
         self.dx = (new_vector[2] - new_vector[0])
         self.dy = (new_vector[3] - new_vector[1])
-
-        # canvas.create_line(x, y, x + dx, y + dy)
-        # print('New vector dx dy ', self.dx, self.dy)
-        # print(('------------'))
 
     def pop_out(self, shell):
         x2 = shell.x
@@ -614,7 +620,6 @@ class Shell:
         shell.x = x2 + (x2 - x1) * (L / (r1 + r2)) * (r2 / (r1 + r2))
         shell.y = y2 + (y2 - y1) * (L / (r1 + r2)) * (r2 / (r1 + r2))
         new_L = ((shell.x - self.x) ** 2 + (shell.y - self.y) ** 2) ** 0.5
-        print(L, new_L)
 
     def print_yourself(self):
         print('x =', self.x, 'y =', self.y)
